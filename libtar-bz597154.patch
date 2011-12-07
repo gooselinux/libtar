@@ -1,0 +1,25 @@
+diff --git a/lib/libtar.h b/lib/libtar.h
+index 79eefa7..a92ae86 100644
+--- a/lib/libtar.h
++++ b/lib/libtar.h
+@@ -172,6 +172,7 @@ int th_write(TAR *t);
+ #define TH_ISDIR(t)	((t)->th_buf.typeflag == DIRTYPE \
+ 			 || S_ISDIR((mode_t)oct_to_int((t)->th_buf.mode)) \
+ 			 || ((t)->th_buf.typeflag == AREGTYPE \
++			     && *((t)->th_buf.name) \
+ 			     && ((t)->th_buf.name[strlen((t)->th_buf.name) - 1] == '/')))
+ #define TH_ISFIFO(t)	((t)->th_buf.typeflag == FIFOTYPE \
+ 			 || S_ISFIFO((mode_t)oct_to_int((t)->th_buf.mode)))
+diff --git a/lib/util.c b/lib/util.c
+index 1cb434b..b2eb2f6 100644
+--- a/lib/util.c
++++ b/lib/util.c
+@@ -131,7 +131,7 @@ th_crc_calc(TAR *t)
+ int
+ oct_to_int(char *oct)
+ {
+-	int i;
++	int i = 0;
+ 
+ 	sscanf(oct, "%o", &i);
+ 
